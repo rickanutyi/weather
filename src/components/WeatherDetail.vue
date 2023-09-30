@@ -1,7 +1,7 @@
 <template>
     <div v-if="!!getDefaultWeather()" class="detail">
         <div class="detail__left">
-            <img class="icon" :src="'src/assets/icons/' + getImage()" alt="" />
+            <img class="icon" :src="`/${getImage()}`" alt="" />
             <span class="text">
                 {{ getText('temprature') }}:
                 <span class="q-ml-sm">

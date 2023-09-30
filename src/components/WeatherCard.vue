@@ -1,7 +1,7 @@
 <template>
     <q-item-section avatar>
         <q-avatar rounded>
-            <img class="icon" :src="`src/assets/icons/${getImage()}`" alt="" />
+            <img class="icon" :src="`/${getImage()}`" alt="icon" />
         </q-avatar>
     </q-item-section>
     <q-item-section>
