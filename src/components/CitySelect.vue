@@ -12,7 +12,9 @@
     >
         <template v-slot:no-option>
             <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
+                <q-item-section class="text-grey">
+                    {{ getText('noResult') }}
+                </q-item-section>
             </q-item>
         </template>
     </q-select>

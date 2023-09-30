@@ -23,4 +23,5 @@ export default {
     celsius: 'Celsius',
     fahrenheit: 'Fahrenheit',
     speed: 'm/s',
+    noResult: 'No results',
 };

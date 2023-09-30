@@ -16,6 +16,7 @@
             </div>
             <div class="weather">
                 <WeatherDetail :weather-list="choosenDays" />
+                <h5 v-if="!cityModel.city">{{ getText('selectCity') }}</h5>
                 <q-list
                     v-if="!isLoading"
                     bordered
@@ -120,6 +121,7 @@ import weatherService from 'src/services/weather-service';
 import { useCountriesStore } from 'stores/countries-store';
 import { useWeatherStore } from 'src/stores/weather-store';
 import { Weather } from 'src/stores/types';
+import { useI18n } from 'vue-i18n';
 
 const countriesStore = useCountriesStore();
 const weatherStore = useWeatherStore();
@@ -185,6 +187,7 @@ export default defineComponent({
         const choosenDays = ref<Weather[]>([]);
         const $q = useQuasar();
         const isDark = ref($q.dark.isActive);
+        const { t } = useI18n();
 
         const onDayClick = (day: Weather) => {
             choosenDays.value = getWeatherList.value.filter((weather) => {
@@ -226,6 +229,7 @@ export default defineComponent({
             switchTheme,
             isDark,
             isLoading: isLoading,
+            getText: t,
         };
     },
 });
