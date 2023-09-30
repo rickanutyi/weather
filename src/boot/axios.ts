@@ -15,7 +15,7 @@ declare module '@vue/runtime-core' {
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-    baseURL: 'http://api.openweathermap.org/data/2.5/forecast',
+    baseURL: 'https://api.openweathermap.org/data/2.5/forecast',
 });
 
 const countryApi = axios.create({
