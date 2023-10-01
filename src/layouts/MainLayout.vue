@@ -1,7 +1,7 @@
 <template>
     <q-layout view="lHh Lpr lFf">
         <div class="q-pa-md q-gutter-sm row">
-            <q-toggle v-model="isDark" class="q-mb-md" />
+            <ThemeToggle />
             <div class="q-ml-lg">
                 <LangSwitcher />
             </div>
@@ -113,9 +113,8 @@
 </style>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, watch } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import { storeToRefs } from 'pinia';
-import { useQuasar } from 'quasar';
 
 import WeatherCard from 'components/WeatherCard.vue';
 import WeatherDetail from 'src/components/WeatherDetail.vue';
@@ -123,56 +122,19 @@ import CountrySelect from 'components/CountrySelect.vue';
 import CitySelect from 'src/components/CitySelect.vue';
 import LangSwitcher from 'src/components/LangSwitcher.vue';
 import TampTypeSwitcher from 'src/components/TampTypeSwitcher.vue';
+import ThemeToggle from 'src/components/ThemeToggle.vue';
 
-import countryService from 'src/services/country-service';
-import weatherService from 'src/services/weather-service';
-
-import { useCountriesStore } from 'stores/countries-store';
 import { useWeatherStore } from 'src/stores/weather-store';
 import { Weather } from 'src/stores/types';
+import { useWeather } from 'src/composable/useWeather';
+import { useCountries } from 'src/composable/useCountries';
 import { useI18n } from 'vue-i18n';
 
-const countriesStore = useCountriesStore();
 const weatherStore = useWeatherStore();
 const { getWeatherList } = storeToRefs(weatherStore);
 
-const isLoading = ref(false);
-
-const getWeather = (city: string) => {
-    isLoading.value = true;
-    weatherService
-        .getWeatherByCity(city)
-        .then((res) => {
-            if (res) {
-                const days: number[] = [];
-                const filtered = res.filter((weather) => {
-                    const date = new Date(weather.dt_txt);
-                    if (!days.includes(date.getDay())) {
-                        days.push(date.getDay());
-                        return true;
-                    } else return false;
-                });
-                weatherStore.setWeatherList(filtered);
-            } else weatherStore.setWeatherList([]);
-        })
-        .catch(() => weatherStore.setWeatherList([]))
-        .finally(() => (isLoading.value = false));
-};
-
-const getCountries = () => {
-    countryService.getCountries().then((res) => {
-        if (res) {
-            const arrayOfCountries = res.map((country) => country.name);
-            countriesStore.setCountries(arrayOfCountries);
-        }
-    });
-};
-
-const getCities = (countryName: string) => {
-    countryService.getCities(countryName).then((res) => {
-        if (res) countriesStore.setCities(res);
-    });
-};
+const { isLoading, getWeather } = useWeather();
+const { getCountries, getCities } = useCountries();
 
 export default defineComponent({
     name: 'MainLayout',
@@ -183,6 +145,7 @@ export default defineComponent({
         CitySelect,
         WeatherDetail,
         LangSwitcher,
+        ThemeToggle,
         TampTypeSwitcher,
     },
     mounted() {
@@ -196,8 +159,7 @@ export default defineComponent({
         const cityModel = ref('Bishkek');
         const choosenDays = ref<Weather[]>([]);
         const choosenCity = ref<string>('Bishkek');
-        const $q = useQuasar();
-        const isDark = ref($q.dark.isActive);
+
         const { t } = useI18n();
 
         const onDayClick = (day: Weather) => {
@@ -209,13 +171,8 @@ export default defineComponent({
             });
         };
 
-        const switchTheme = () => {
-            $q.dark.toggle();
-        };
-
         const handleSelectCountry = (v: string) => (model.value = v);
         const handleSelectCity = (v: string) => (cityModel.value = v);
-        watch(isDark, () => switchTheme());
 
         watch(model, () => {
             cityModel.value = '';
@@ -236,8 +193,6 @@ export default defineComponent({
             cityModel,
             onDayClick,
             choosenDays,
-            switchTheme,
-            isDark,
             isLoading: isLoading,
             getText: t,
             choosenCity,
