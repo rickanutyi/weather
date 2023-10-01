@@ -5,14 +5,20 @@ import { watch, ref } from 'vue';
 
 const countriesStore = useCountriesStore();
 const { country } = useCountry();
+const city = ref('');
 
 const getCities = (countryName: string) => {
-    countryService.getCities(countryName).then((res) => {
-        if (res) countriesStore.setCities(res);
-    });
+    city.value = '';
+    countryService
+        .getCities(countryName)
+        .then((res) => {
+            if (res) countriesStore.setCities(res);
+            else countriesStore.setCities([]);
+        })
+        .catch((err) => {
+            countriesStore.setCities([]);
+        });
 };
-
-const city = ref('');
 
 watch(country, () => {
     city.value = '';
