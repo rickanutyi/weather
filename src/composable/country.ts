@@ -1,7 +1,9 @@
+import { ref } from 'vue';
 import countryService from 'src/services/country-service';
-import { useCountriesStore } from 'src/stores/countries-store';
+import { useCountriesStore } from 'stores/countries-store';
 
 const countriesStore = useCountriesStore();
+const country = ref('');
 
 const getCountries = () => {
     countryService.getCountries().then((res) => {
@@ -12,12 +14,6 @@ const getCountries = () => {
     });
 };
 
-const getCities = (countryName: string) => {
-    countryService.getCities(countryName).then((res) => {
-        if (res) countriesStore.setCities(res);
-    });
-};
-
-export function useCountries() {
-    return { getCountries, getCities };
+export function useCountry() {
+    return { getCountries, country };
 }

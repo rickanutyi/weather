@@ -1,66 +1,64 @@
 <template>
-    <SelectCustom
-        :form-data="model"
+    <q-select
+        filled
+        v-model="model"
+        use-input
+        input-debounce="0"
+        :label="t('selectCountry')"
         :options="options"
-        :label="getText('selectCountry')"
-        :on-select-value="onSelect"
-    />
+        @filter="filterFn"
+        behavior="menu"
+    >
+        <template v-slot:no-option>
+            <q-item>
+                <q-item-section class="text-grey">
+                    {{ t('noResult') }}
+                </q-item-section>
+            </q-item>
+        </template>
+    </q-select>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { storeToRefs } from 'pinia';
-import { ref, defineComponent, watch, PropType } from 'vue';
+import { defineProps, ref, watch } from 'vue';
+import { useCountriesStore } from 'src/stores/countries-store';
 import { useI18n } from 'vue-i18n';
 
-import { useCountriesStore } from 'src/stores/countries-store';
-import SelectCustom from './SelectCustom.vue';
+const store = useCountriesStore();
+const { countries } = storeToRefs(store);
+const { t } = useI18n();
 
-export default defineComponent({
-    components: {
-        SelectCustom,
-    },
-    props: {
-        formData: {
-            type: String,
-            required: true,
-        },
-        onSelectCountry: {
-            required: true,
-            type: Function as PropType<(v: string) => void>,
-        },
-    },
-    setup(props) {
-        const store = useCountriesStore();
-        const { countries } = storeToRefs(store);
-        const { t } = useI18n();
-        const getText = (key: string) => t(key);
-
-        const model = ref(props.formData || '');
-        const options = ref(countries);
-
-        const filterFn = (val: string, update: (arg: () => void) => void) => {
-            if (val === '' || !val) {
-                update(() => {
-                    options.value = countries.value;
-                });
-                return;
-            }
-
-            update(() => {
-                const needle = val.toLowerCase();
-                options.value = countries.value.filter(
-                    (v) => v.toLowerCase().indexOf(needle) > -1
-                );
-            });
-        };
-
-        return {
-            getText,
-            model,
-            options,
-            filterFn,
-            onSelect: props.onSelectCountry,
-        };
+const props = defineProps({
+    modelValue: {
+        type: String,
+        default: '',
     },
 });
+
+const emit = defineEmits(['update:modelValue']);
+
+const model = ref(props.modelValue);
+const options = ref(countries.value);
+
+watch(model, (value) => {
+    emit('update:modelValue', value);
+});
+
+const filterFn = (val: string, update: (arg: () => void) => void) => {
+    if (val === '' || !val) {
+        update(() => {
+            options.value = countries.value;
+        });
+
+        return;
+    }
+
+    update(() => {
+        const needle = val.toLowerCase();
+        options.value = countries.value.filter(
+            (v) => v.toLowerCase().indexOf(needle) > -1
+        );
+    });
+};
 </script>

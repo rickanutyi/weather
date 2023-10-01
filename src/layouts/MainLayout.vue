@@ -1,7 +1,12 @@
 <template>
     <q-layout view="lHh Lpr lFf">
-        <div class="q-pa-md q-gutter-sm row">
-            <ThemeToggle />
+        <div class="q-pa-md q-gutter-sm row no-wrap">
+            <q-toggle
+                :model-value="$q.dark.isActive"
+                @update:model-value="toggleTheme"
+                class="q-mb-md"
+            />
+
             <div class="q-ml-lg">
                 <LangSwitcher />
             </div>
@@ -9,195 +14,41 @@
                 <TampTypeSwitcher />
             </div>
         </div>
-        <q-page-container class="main">
-            <div class="form">
-                <CountrySelect
-                    :on-select-country="handleSelectCountry"
-                    :form-data="model"
-                />
-                <CitySelect
-                    :on-select-city="handleSelectCity"
-                    :form-data="cityModel"
-                />
-            </div>
-            <div class="weather">
-                <WeatherDetail
-                    :city="choosenCity"
-                    :weather-list="choosenDays"
-                />
-                <h5 v-if="!cityModel">{{ getText('selectCity') }}</h5>
-                <q-list
-                    v-if="!isLoading"
-                    bordered
-                    separator
-                    class="weather_list"
-                >
-                    <q-item
-                        class="list-item"
-                        clickable
-                        v-ripple
-                        @click="onDayClick(weather)"
-                        v-for="weather in weatherList"
-                        :key="weather.dt"
-                    >
-                        <weather-card :weather="weather" />
-                    </q-item>
-                </q-list>
-                <div v-if="isLoading" class="progress__wrapper">
-                    <q-circular-progress
-                        indeterminate
-                        rounded
-                        size="50px"
-                        color="lime"
-                        class="q-ma-md"
-                    />
-                </div>
-            </div>
+
+        <q-page-container class="container">
+            <router-view />
         </q-page-container>
     </q-layout>
 </template>
 
 <style lang="scss" scoped>
-.main {
-    display: flex;
-    gap: 20px;
-    padding-bottom: 20px;
-    @media screen and (max-width: 760px) {
-        flex-direction: column;
-        padding-inline: 16px;
-    }
-}
-.weather,
-.form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    padding-top: 20px;
-}
-
-.weather {
-    @media screen and (max-width: 760px) {
-        align-items: center;
-        justify-content: center;
-    }
-}
-
-.form {
-    align-items: flex-end;
-    justify-content: flex-start;
-    gap: 5px;
-    @media screen and (max-width: 760px) {
-        align-items: center;
-        justify-content: center;
-    }
-}
-.weather_list {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    flex-wrap: wrap;
-    min-width: min(340px, 100%);
-}
-.list-item {
-    min-width: min(340px, 100%);
-}
-.progress__wrapper {
-    min-width: min(340px, 100%);
-    min-height: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 16px;
 }
 </style>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import { storeToRefs } from 'pinia';
-
-import WeatherCard from 'components/WeatherCard.vue';
-import WeatherDetail from 'src/components/WeatherDetail.vue';
-import CountrySelect from 'components/CountrySelect.vue';
-import CitySelect from 'src/components/CitySelect.vue';
+import { defineComponent } from 'vue';
 import LangSwitcher from 'src/components/LangSwitcher.vue';
 import TampTypeSwitcher from 'src/components/TampTypeSwitcher.vue';
-import ThemeToggle from 'src/components/ThemeToggle.vue';
-
-import { useWeatherStore } from 'src/stores/weather-store';
-import { Weather } from 'src/stores/types';
-import { useWeather } from 'src/composable/useWeather';
-import { useCountries } from 'src/composable/useCountries';
-import { useI18n } from 'vue-i18n';
-
-const weatherStore = useWeatherStore();
-const { getWeatherList } = storeToRefs(weatherStore);
-
-const { isLoading, getWeather } = useWeather();
-const { getCountries, getCities } = useCountries();
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
     name: 'MainLayout',
 
     components: {
-        WeatherCard,
-        CountrySelect,
-        CitySelect,
-        WeatherDetail,
         LangSwitcher,
-        ThemeToggle,
         TampTypeSwitcher,
-    },
-    mounted() {
-        getCountries();
-        getCities(this.model);
-        getWeather(this.cityModel);
     },
 
     setup() {
-        const model = ref('Kyrgyzstan');
-        const cityModel = ref('Bishkek');
-        const choosenDays = ref<Weather[]>([]);
-        const choosenCity = ref<string>('Bishkek');
+        const $q = useQuasar();
+        const toggleTheme = () => $q.dark.toggle();
 
-        const { t } = useI18n();
-
-        const onDayClick = (day: Weather) => {
-            choosenDays.value = getWeatherList.value.filter((weather) => {
-                const date = new Date(weather.dt_txt);
-                const choosenDate = new Date(day.dt_txt);
-                if (date.getDay() === choosenDate.getDay()) return true;
-                return false;
-            });
-        };
-
-        const handleSelectCountry = (v: string) => (model.value = v);
-        const handleSelectCity = (v: string) => (cityModel.value = v);
-
-        watch(model, () => {
-            cityModel.value = '';
-            getCities(model.value);
-        });
-
-        watch(cityModel, () => {
-            choosenCity.value = cityModel.value;
-            getWeather(cityModel.value);
-        });
-
-        watch(getWeatherList, () => {
-            getWeatherList.value.length && onDayClick(getWeatherList.value[0]);
-        });
         return {
-            weatherList: getWeatherList,
-            model,
-            cityModel,
-            onDayClick,
-            choosenDays,
-            isLoading: isLoading,
-            getText: t,
-            choosenCity,
-            handleSelectCountry,
-            handleSelectCity,
+            toggleTheme,
         };
     },
 });

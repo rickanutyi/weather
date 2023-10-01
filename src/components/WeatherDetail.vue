@@ -64,7 +64,6 @@
 .detail {
     padding: 20px 0px;
     min-width: min(340px, 100%);
-    flex: 1;
     display: flex;
     justify-content: space-between;
 }
