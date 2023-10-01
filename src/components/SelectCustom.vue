@@ -62,6 +62,13 @@ watch(
     }
 );
 
+watch(
+    () => props.label,
+    () => {
+        label.value = props.label;
+    }
+);
+
 const getText = (key: string) => t(key);
 const filterFn = (val: string, update: (arg: () => void) => void) => {
     if (!val || val === '') {
