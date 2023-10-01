@@ -3,16 +3,9 @@
 </template>
 
 <script lang="ts">
-import { Meta } from 'components/models';
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
     name: 'IndexPage',
-    setup() {
-        const meta = ref<Meta>({
-            totalCount: 1200,
-        });
-        return { meta };
-    },
 });
 </script>

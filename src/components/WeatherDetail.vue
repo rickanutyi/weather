@@ -55,6 +55,7 @@
         </div>
         <div class="detail__right">
             <h4 class="text title">{{ getText('weather') }}</h4>
+            <span>{{ choosenCity }}</span> <br />
             <span class="text">{{ getText('date') }} {{ dateTime }}</span>
         </div>
     </div>
@@ -96,6 +97,7 @@ import { useI18n } from 'vue-i18n';
 
 const props = defineProps({
     weatherList: Object as PropType<Weather[]>,
+    city: String,
 });
 
 const tempStore = storeToRefs(useTempStore());
@@ -103,7 +105,7 @@ const { t } = useI18n();
 
 const getText = (key: string) => t(key);
 const tempType = showTempType;
-
+const choosenCity = ref(props.city);
 const getDefaultWeather = () => {
     if (props.weatherList && props.weatherList.length)
         return props.weatherList[0];
@@ -113,11 +115,21 @@ const dateTime = ref(
     dayjs(getDefaultWeather()?.dt_txt || '').format('DD-MM-YYYY / HH:MM')
 );
 
-watch(props, () => {
-    dateTime.value = dayjs(getDefaultWeather()?.dt_txt || '').format(
-        'DD-MM-YYYY / HH:MM'
-    );
-});
+watch(
+    () => props.weatherList,
+    () => {
+        dateTime.value = dayjs(getDefaultWeather()?.dt_txt || '').format(
+            'DD-MM-YYYY / HH:MM'
+        );
+    }
+);
+
+watch(
+    () => props.city,
+    () => {
+        choosenCity.value = props.city;
+    }
+);
 
 const getImage = () => {
     if (props.weatherList && props.weatherList.length) {

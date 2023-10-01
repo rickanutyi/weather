@@ -11,12 +11,21 @@
         </div>
         <q-page-container class="main">
             <div class="form">
-                <CountrySelect :form-data="model" />
-                <CitySelect :form-data="cityModel" />
+                <CountrySelect
+                    :on-select-country="handleSelectCountry"
+                    :form-data="model"
+                />
+                <CitySelect
+                    :on-select-city="handleSelectCity"
+                    :form-data="cityModel"
+                />
             </div>
             <div class="weather">
-                <WeatherDetail :weather-list="choosenDays" />
-                <h5 v-if="!cityModel.city">{{ getText('selectCity') }}</h5>
+                <WeatherDetail
+                    :city="choosenCity"
+                    :weather-list="choosenDays"
+                />
+                <h5 v-if="!cityModel">{{ getText('selectCity') }}</h5>
                 <q-list
                     v-if="!isLoading"
                     bordered
@@ -178,13 +187,15 @@ export default defineComponent({
     },
     mounted() {
         getCountries();
+        getCities(this.model);
+        getWeather(this.cityModel);
     },
 
     setup() {
-        const leftDrawerOpen = ref(false);
-        const model = reactive({ country: '' });
-        const cityModel = reactive({ city: '' });
+        const model = ref('Kyrgyzstan');
+        const cityModel = ref('Bishkek');
         const choosenDays = ref<Weather[]>([]);
+        const choosenCity = ref<string>('Bishkek');
         const $q = useQuasar();
         const isDark = ref($q.dark.isActive);
         const { t } = useI18n();
@@ -202,15 +213,18 @@ export default defineComponent({
             $q.dark.toggle();
         };
 
+        const handleSelectCountry = (v: string) => (model.value = v);
+        const handleSelectCity = (v: string) => (cityModel.value = v);
         watch(isDark, () => switchTheme());
 
         watch(model, () => {
-            cityModel.city = '';
-            getCities(model.country);
+            cityModel.value = '';
+            getCities(model.value);
         });
 
         watch(cityModel, () => {
-            getWeather(cityModel.city);
+            choosenCity.value = cityModel.value;
+            getWeather(cityModel.value);
         });
 
         watch(getWeatherList, () => {
@@ -218,10 +232,6 @@ export default defineComponent({
         });
         return {
             weatherList: getWeatherList,
-            leftDrawerOpen,
-            toggleLeftDrawer() {
-                leftDrawerOpen.value = !leftDrawerOpen.value;
-            },
             model,
             cityModel,
             onDayClick,
@@ -230,6 +240,9 @@ export default defineComponent({
             isDark,
             isLoading: isLoading,
             getText: t,
+            choosenCity,
+            handleSelectCountry,
+            handleSelectCity,
         };
     },
 });

@@ -1,4 +1,3 @@
-import { boot } from 'quasar/wrappers';
 import dayjs from 'dayjs';
 import 'dayjs/locale/ru';
 
