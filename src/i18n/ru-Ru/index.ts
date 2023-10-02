@@ -22,4 +22,5 @@ export default {
     speed: 'м/с',
     noResult: 'Не найдено',
     chooseCountryFirst: 'Выберите сперва страну',
+    todaysForecast: 'Cегодняшний прогноз',
 };

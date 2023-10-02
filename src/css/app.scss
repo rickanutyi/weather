@@ -2,3 +2,23 @@
 .body--light {
     background-color: #f6f6f6;
 }
+
+body.body--dark {
+    background-color: #0b131e;
+}
+
+.body--dark .bg-theme-medium {
+    background-color: #202b3b;
+}
+
+.body--light .bg-theme-medium {
+    background-color: #e2e2e2;
+}
+
+.q-field--filled.q-field--rounded .q-field__control {
+    border-radius: 10px;
+}
+// list item
+.body--light .q-item__section--side {
+    color: #000;
+}

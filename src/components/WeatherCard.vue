@@ -1,19 +1,19 @@
 <template>
+    <q-item-section side>
+        <span class="date">{{ formatDate(weather?.dt_txt || '') }}</span>
+    </q-item-section>
     <q-item-section avatar>
         <q-avatar rounded>
             <img class="icon" :src="`/${getImage()}`" alt="icon" />
         </q-avatar>
     </q-item-section>
-    <q-item-section>
-        <span class="date">{{ formatDate(weather?.dt_txt || '') }}</span>
-    </q-item-section>
-    <q-item-section>
+    <q-item-section side>
         <span>
-            {{ getText('temprature') }}
             {{ tempType(weather?.main.temp || 0, tempStore.getTempType.value) }}
         </span>
     </q-item-section>
 </template>
+<!-- {{ getText('temprature') }} -->
 
 <script lang="ts" setup>
 import { PropType } from 'vue';
@@ -68,4 +68,8 @@ const formatDate = (date: string) => {
 .date {
     color: '#000';
 }
+
+/* .custom-section.q-item__section--main {
+    flex: 0.5 1 0%;
+} */
 </style>

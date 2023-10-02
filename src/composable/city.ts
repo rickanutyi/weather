@@ -1,11 +1,9 @@
 import countryService from 'src/services/country-service';
 import { useCountriesStore } from 'stores/countries-store';
-import { useCountry } from './country';
-import { watch, ref } from 'vue';
+import { ref } from 'vue';
 import { Notify } from 'quasar';
 const countriesStore = useCountriesStore();
-const { country } = useCountry();
-const city = ref('');
+const city = ref('Bishkek');
 
 const getCities = (countryName: string) => {
     city.value = '';
@@ -29,11 +27,6 @@ const getCities = (countryName: string) => {
             });
         });
 };
-
-// watch(country, () => {
-//     city.value = '';
-//     getCities(country.value);
-// });
 
 export function useCities() {
     return { getCities, city };

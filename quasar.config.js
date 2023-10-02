@@ -108,6 +108,9 @@ module.exports = configure(function (/* ctx */) {
             plugins: ['Notify'],
             config: {
                 dark: true,
+                screen: {
+                    bodyClasses: true, // <<< add this
+                },
             },
 
             // iconSet: 'material-icons', // Quasar icon set

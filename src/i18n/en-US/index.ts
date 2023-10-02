@@ -25,4 +25,5 @@ export default {
     speed: 'm/s',
     noResult: 'No results',
     chooseCountryFirst: 'choose country first',
+    todaysForecast: "Today's forecast",
 };

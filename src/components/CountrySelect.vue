@@ -8,6 +8,8 @@
         :options="options"
         @filter="filterFn"
         behavior="menu"
+        rounded
+        popup-content-style="border-radius: 10px bg-theme"
     >
         <template v-slot:no-option>
             <q-item>

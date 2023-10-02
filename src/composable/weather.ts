@@ -19,16 +19,7 @@ const fetchWeather = (weatherStore: WeatherStore, city: string) => {
         .getWeatherByCity(city)
         .then((res) => {
             if (res?.length) {
-                const days: number[] = [];
-                const filtered = res.filter((weather) => {
-                    const date = new Date(weather.dt_txt);
-
-                    if (!days.includes(date.getDay())) {
-                        days.push(date.getDay());
-                        return true;
-                    } else return false;
-                });
-                weatherStore.setWeatherList(filtered);
+                weatherStore.setWeatherList(res);
             } else {
                 weatherStore.setWeatherList([]);
                 Notify.create({
@@ -54,11 +45,12 @@ function getByDate(weatherStore: WeatherStore, date?: Date | null) {
 
 export function useWeather() {
     const weatherStore = useWeatherStore();
-    const { weatherList } = storeToRefs(weatherStore);
+    const { getWeatherList: weatherList } = storeToRefs(weatherStore);
 
     const getWeather = (city: string) => fetchWeather(weatherStore, city);
-    const getWeatherByDate = (date?: Date | null) =>
-        getByDate(weatherStore, date);
+    const getWeatherByDate = (date?: Date | null) => {
+        return getByDate(weatherStore, date);
+    };
 
     return { isLoading, getWeather, getWeatherByDate, weatherList };
 }

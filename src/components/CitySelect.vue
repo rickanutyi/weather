@@ -10,6 +10,7 @@
         behavior="menu"
         :hint="isCountryCoosen ? '' : t('chooseCountryFirst')"
         :disable="!isCountryCoosen"
+        rounded
     >
         <template v-slot:no-option>
             <q-item>

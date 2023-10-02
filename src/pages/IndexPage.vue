@@ -1,48 +1,84 @@
 <template>
-    <q-page class="page row q-col-gutter-md">
-        <div class="col-12 col-sm-6 q-mb-md">
+    <q-page class="page q-col-gutter-md">
+        <div class="col-4 q-mb-md">
             <CountrySelect v-model="country" />
             <CitySelect v-model="city" :coutry="country" class="q-mt-sm" />
         </div>
 
-        <div class="col-12 col-sm-6">
-            <WeatherDetail :weather-list="getWeatherByDate(currentDate)" />
-
-            <h5 v-if="!city">{{ t('selectCity') }}</h5>
-
-            <div v-if="isLoading" class="progress__wrapper">
-                <q-circular-progress
-                    indeterminate
-                    rounded
-                    size="50px"
-                    color="lime"
-                    class="q-ma-md"
+        <div class="col-12 row row-mobile">
+            <div class="col-12 col-md-6 clear__padding">
+                <WeatherDetail
+                    :city="city"
+                    :weather-list="getWeatherByDate(currentDate)"
                 />
             </div>
 
-            <q-list v-else bordered separator class="weather_list">
-                <q-item
-                    v-ripple
-                    class="list-item"
-                    clickable
-                    v-for="weather in weatherList"
-                    @click="onWeatherClick(weather)"
-                    :key="weather.dt"
+            <div class="col-12 col-md-6 q-mt-md">
+                <h6 class="q-mt-sm q-mb-sm" v-if="!city">
+                    {{ t('selectCity') }}
+                </h6>
+
+                <div v-if="isLoading" class="progress__wrapper">
+                    <q-circular-progress
+                        indeterminate
+                        rounded
+                        size="50px"
+                        color="lime"
+                        class="q-ma-md"
+                    />
+                </div>
+
+                <q-list
+                    v-else
+                    borderless
+                    separator
+                    class="weather_list bg-theme-medium"
                 >
-                    <weather-card :weather="weather" />
-                </q-item>
-            </q-list>
+                    <q-item
+                        v-ripple
+                        class="list-item"
+                        clickable
+                        v-for="weather in weatherList"
+                        @click="onWeatherClick(weather)"
+                        :key="weather.dt"
+                    >
+                        <weather-card :weather="weather" />
+                    </q-item>
+                </q-list>
+            </div>
         </div>
     </q-page>
 </template>
 
-<style>
+<style scoped lang="scss">
 .page {
     min-height: auto !important;
 }
 .progress__wrapper {
     display: flex;
     justify-content: center;
+}
+
+body.screen--md .clear__padding,
+body.screen--lg .clear__padding {
+    padding-right: 15px;
+}
+.weather_list {
+    padding: 10px;
+    border-radius: 10px;
+}
+.list-item {
+    padding-block: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+.row-mobile {
+    @media screen and (max-width: 670px) {
+        flex-direction: column;
+    }
+}
+.mobile-mt {
+    margin-top: 0px;
 }
 </style>
 
@@ -75,6 +111,7 @@ export default defineComponent({
     },
     mounted() {
         getCountries();
+        getWeather(city.value);
     },
 
     setup() {
@@ -89,7 +126,11 @@ export default defineComponent({
             city.value = '';
             getCities(value);
         });
-        watch(weatherList, () => (currentDate.value = null));
+        watch(weatherList, () => {
+            if (weatherList.value.length) {
+                currentDate.value = new Date(weatherList.value[0].dt_txt);
+            } else currentDate.value = null;
+        });
 
         return {
             weatherList,

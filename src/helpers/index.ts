@@ -6,10 +6,10 @@ export const getImgName = (w: WeatherType) => {
     return 'rain_s_cloudy.png';
 };
 
-export const showTempType = (temp: number, type: 'C' | 'F') => {
+export const showTempType = (temp: number, type: 'C' | 'F', fixed = 2) => {
     if (type === 'F') {
         const res = temp * (9 / 5) + 32;
-        return `${res.toFixed(2)}°F`;
+        return `${res.toFixed(fixed)}°F`;
     } else return `${temp}°C`;
 };
 
