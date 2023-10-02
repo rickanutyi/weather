@@ -55,6 +55,7 @@ import { Weather } from 'src/stores/types';
 import { useWeather } from 'src/composable/weather';
 import { useCountry } from 'src/composable/country';
 import { useCities } from 'src/composable/city';
+import { useQuasar } from 'quasar';
 
 const { getWeather, isLoading, getWeatherByDate, weatherList } = useWeather();
 const { getCountries, country } = useCountry();
@@ -76,7 +77,6 @@ export default defineComponent({
     setup() {
         const currentDate = ref<Date | null>(null);
         const { t } = useI18n();
-
         const onWeatherClick = ({ dt_txt: day }: Weather) => {
             currentDate.value = new Date(day);
         };

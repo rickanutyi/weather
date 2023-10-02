@@ -10,14 +10,10 @@ type BaseResponse<T> = {
 export default {
     async getCountries() {
         const url = '/capital';
-        return countryApi
-            .get<BaseResponse<Country[]>>(url)
-            .then((res) => {
-                if (!res.data.error) return res.data?.data;
-                console.error(String(res.data));
-                return [];
-            })
-            .catch((err) => console.error(err));
+        return countryApi.get<BaseResponse<Country[]>>(url).then((res) => {
+            if (!res.data.error) return res.data?.data;
+            return [];
+        });
     },
     async getCities(countryName: string) {
         const url = '/cities';
@@ -27,7 +23,6 @@ export default {
                 if (!res.data.error) return res.data?.data;
                 console.error(String(res.data));
                 return [];
-            })
-            .catch((err) => console.error(err));
+            });
     },
 };

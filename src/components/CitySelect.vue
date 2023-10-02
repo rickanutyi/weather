@@ -44,8 +44,14 @@ watch(model, (value) => {
     emit('update:modelValue', value);
 });
 
+watch(
+    () => props.modelValue,
+    (value) => {
+        model.value = value;
+    }
+);
+
 const filterFn = (val: string, update: (arg: () => void) => void) => {
-    console.log(val);
     if (!val || val === '') {
         update(() => {
             options.value = stringOptions.value;

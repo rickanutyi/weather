@@ -2,18 +2,23 @@ import { ref } from 'vue';
 import weatherService from 'src/services/weather-service';
 import { WeatherStore, useWeatherStore } from 'src/stores/weather-store';
 import { storeToRefs } from 'pinia';
+import { Notify } from 'quasar';
 
 const isLoading = ref(false);
 
 isLoading.value = false;
 
 const fetchWeather = (weatherStore: WeatherStore, city: string) => {
+    if (!city) {
+        weatherStore.setWeatherList([]);
+        return;
+    }
     isLoading.value = true;
 
     weatherService
         .getWeatherByCity(city)
         .then((res) => {
-            if (res) {
+            if (res?.length) {
                 const days: number[] = [];
                 const filtered = res.filter((weather) => {
                     const date = new Date(weather.dt_txt);
@@ -24,9 +29,21 @@ const fetchWeather = (weatherStore: WeatherStore, city: string) => {
                     } else return false;
                 });
                 weatherStore.setWeatherList(filtered);
-            } else weatherStore.setWeatherList([]);
+            } else {
+                weatherStore.setWeatherList([]);
+                Notify.create({
+                    type: 'negative',
+                    message: `Ошибка при получении данных о погоде по городу ${city}.`,
+                });
+            }
         })
-        .catch(() => weatherStore.setWeatherList([]))
+        .catch((err) => {
+            weatherStore.setWeatherList([]);
+            Notify.create({
+                type: 'negative',
+                message: `Ошибка при получении данных о погоде по городу ${city}.`,
+            });
+        })
         .finally(() => (isLoading.value = false));
 };
 

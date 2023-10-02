@@ -21,9 +21,7 @@ export default {
             })
             .then((res) => {
                 if (res.status === 200) return res.data.list;
-                console.error(String(res.data));
                 return [];
-            })
-            .catch((err) => console.error(err));
+            });
     },
 };
