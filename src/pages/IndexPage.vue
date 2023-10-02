@@ -2,7 +2,7 @@
     <q-page class="page row q-col-gutter-md">
         <div class="col-12 col-sm-6 q-mb-md">
             <CountrySelect v-model="country" />
-            <CitySelect v-model="city" />
+            <CitySelect v-model="city" :coutry="country" class="q-mt-sm" />
         </div>
 
         <div class="col-12 col-sm-6">
@@ -55,7 +55,6 @@ import { Weather } from 'src/stores/types';
 import { useWeather } from 'src/composable/weather';
 import { useCountry } from 'src/composable/country';
 import { useCities } from 'src/composable/city';
-import { useQuasar } from 'quasar';
 
 const { getWeather, isLoading, getWeatherByDate, weatherList } = useWeather();
 const { getCountries, country } = useCountry();
@@ -82,7 +81,10 @@ export default defineComponent({
         };
 
         watch(city, (value) => getWeather(value));
-        watch(country, (value) => getCities(value));
+        watch(country, (value) => {
+            city.value = '';
+            getCities(value);
+        });
         watch(weatherList, () => (currentDate.value = null));
 
         return {

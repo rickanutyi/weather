@@ -24,4 +24,5 @@ export default {
     fahrenheit: 'Fahrenheit',
     speed: 'm/s',
     noResult: 'No results',
+    chooseCountryFirst: 'choose country first',
 };

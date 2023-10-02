@@ -21,4 +21,5 @@ export default {
     fahrenheit: 'Фаренгейт',
     speed: 'м/с',
     noResult: 'Не найдено',
+    chooseCountryFirst: 'Выберите сперва страну',
 };

@@ -4,10 +4,11 @@
         v-model="model"
         use-input
         input-debounce="0"
-        :label="t('selectCity')"
+        :label="isCountryCoosen ? t('selectCity') : t('chooseCountryFirst')"
         :options="options"
         @filter="filterFn"
         behavior="menu"
+        :disable="!isCountryCoosen"
     >
         <template v-slot:no-option>
             <q-item>
@@ -30,6 +31,10 @@ const props = defineProps({
         type: String,
         default: '',
     },
+    coutry: {
+        tyle: String,
+        default: '',
+    },
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -39,6 +44,7 @@ const store = useCountriesStore();
 const { cities: stringOptions } = storeToRefs(store);
 const options = ref(stringOptions);
 const model = ref(props.modelValue);
+const isCountryCoosen = ref(false);
 
 watch(model, (value) => {
     emit('update:modelValue', value);
@@ -50,7 +56,13 @@ watch(
         model.value = value;
     }
 );
-
+watch(
+    () => props.coutry,
+    (value) => {
+        if (value) isCountryCoosen.value = true;
+        else isCountryCoosen.value = false;
+    }
+);
 const filterFn = (val: string, update: (arg: () => void) => void) => {
     if (!val || val === '') {
         update(() => {
