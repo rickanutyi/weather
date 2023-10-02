@@ -4,10 +4,11 @@
         v-model="model"
         use-input
         input-debounce="0"
-        :label="isCountryCoosen ? t('selectCity') : t('chooseCountryFirst')"
+        :label="t('selectCity')"
         :options="options"
         @filter="filterFn"
         behavior="menu"
+        :hint="isCountryCoosen ? '' : t('chooseCountryFirst')"
         :disable="!isCountryCoosen"
     >
         <template v-slot:no-option>
