@@ -5,7 +5,7 @@
             <CitySelect v-model="city" :coutry="country" class="q-mt-sm" />
         </div>
 
-        <div class="col-12 row row-mobile">
+        <div class="col-12 row row-mobile q-pb-md">
             <div class="col-12 col-md-6 clear__padding">
                 <WeatherDetail
                     :city="city"

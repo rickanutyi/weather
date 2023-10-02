@@ -46,7 +46,7 @@
             <span class="q-ml-sm">
                 {{
                     tempType(
-                        getDefaultWeather()?.main.temp || 0,
+                        currentWeather?.main.temp || 0,
                         tempStore.getTempType.value
                     )
                 }}
@@ -57,7 +57,7 @@
             <span class="q-ml-sm">
                 {{
                     tempType(
-                        getDefaultWeather()?.main.feels_like || 0,
+                        currentWeather?.main.feels_like || 0,
                         tempStore.getTempType.value
                     )
                 }}
@@ -68,7 +68,7 @@
             <span class="q-ml-sm">
                 {{
                     tempType(
-                        getDefaultWeather()?.main.temp_min || 0,
+                        currentWeather?.main.temp_min || 0,
                         tempStore.getTempType.value
                     )
                 }}
@@ -79,7 +79,7 @@
             <span class="q-ml-sm">
                 {{
                     tempType(
-                        getDefaultWeather()?.main.temp_max || 0,
+                        currentWeather?.main.temp_max || 0,
                         tempStore.getTempType.value
                     )
                 }}
@@ -88,7 +88,7 @@
         <span class="text">
             {{ getText('wind') }}:
             <span class="q-ml-sm">
-                {{ getDefaultWeather()?.wind.speed }} {{ getText('speed') }}
+                {{ currentWeather?.wind.speed }} {{ getText('speed') }}
             </span>
         </span>
     </div>
