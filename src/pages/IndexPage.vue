@@ -40,6 +40,10 @@
 .page {
     min-height: auto !important;
 }
+.progress__wrapper {
+    display: flex;
+    justify-content: center;
+}
 </style>
 
 <script lang="ts">
