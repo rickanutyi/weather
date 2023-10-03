@@ -46,7 +46,7 @@ const store = useCountriesStore();
 const { cities: stringOptions } = storeToRefs(store);
 const options = ref(stringOptions);
 const model = ref(props.modelValue);
-const isCountryCoosen = ref(false);
+const isCountryCoosen = ref(true);
 
 watch(model, (value) => {
     emit('update:modelValue', value);

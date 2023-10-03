@@ -134,7 +134,9 @@
     padding: 10px;
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 5px;
+    flex: 1;
 }
 
 .card__temp {

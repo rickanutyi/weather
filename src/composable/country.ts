@@ -3,7 +3,7 @@ import countryService from 'src/services/country-service';
 import { useCountriesStore } from 'stores/countries-store';
 import { Notify } from 'quasar';
 const countriesStore = useCountriesStore();
-const country = ref('');
+const country = ref('Kyrgyzstan');
 
 const getCountries = () => {
     countryService

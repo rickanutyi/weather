@@ -6,7 +6,6 @@ const countriesStore = useCountriesStore();
 const city = ref('Bishkek');
 
 const getCities = (countryName: string) => {
-    city.value = '';
     return countryService
         .getCities(countryName)
         .then((res) => {

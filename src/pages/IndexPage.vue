@@ -32,7 +32,7 @@
                     v-else
                     borderless
                     separator
-                    class="weather_list bg-theme-medium"
+                    class="week__list bg-theme-medium"
                 >
                     <q-item
                         v-ripple
@@ -63,9 +63,10 @@ body.screen--md .clear__padding,
 body.screen--lg .clear__padding {
     padding-right: 15px;
 }
-.weather_list {
+.week__list {
     padding: 10px;
     border-radius: 10px;
+    min-height: 100px;
 }
 .list-item {
     padding-block: 20px;
@@ -76,6 +77,9 @@ body.screen--lg .clear__padding {
     @media screen and (max-width: 670px) {
         flex-direction: column;
     }
+}
+.week__list {
+    min-height: 100px;
 }
 .mobile-mt {
     margin-top: 0px;
@@ -112,6 +116,7 @@ export default defineComponent({
     mounted() {
         getCountries();
         getWeather(city.value);
+        getCities(country.value);
     },
 
     setup() {
