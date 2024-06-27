@@ -6,13 +6,12 @@
         </div>
 
         <div class="col-12 row row-mobile q-pb-md">
-            <div class="col-12 col-md-6 clear__padding">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-6 pr-16">
                 <WeatherDetail
                     :city="city"
                     :weather-list="getWeatherByDate(currentDate)"
                 />
             </div>
-
             <div class="col-12 col-md-6 q-mt-md">
                 <h6 class="q-mt-sm q-mb-sm" v-if="!city">
                     {{ t('selectCity') }}
@@ -76,6 +75,11 @@ body.screen--lg .clear__padding {
 .row-mobile {
     @media screen and (max-width: 670px) {
         flex-direction: column;
+    }
+}
+.pr-16 {
+    @media screen and (min-width: 1025px) {
+        padding-right: 16px;
     }
 }
 .week__list {
